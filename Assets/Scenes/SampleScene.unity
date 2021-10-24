@@ -5388,6 +5388,11 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!4 &440218808 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400326, guid: 8f0565f23a2b58541a475bd3c1393052, type: 3}
+  m_PrefabInstance: {fileID: 440218800}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &566991073
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6173,6 +6178,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b397e9d90010494a8f8c313d06a5526, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uniryChan: {fileID: 440218808}
   carPrefab: {fileID: 7342535338669471125, guid: d52ae07833f73fa42bae00d7d2c02968, type: 3}
   coinPrefab: {fileID: 2696703116641697421, guid: 36cefa43b514a734a98ce8b770d99275, type: 3}
   conePrefab: {fileID: 1497516753609935038, guid: 7dc109a8a7f848a47a9a85d9145b8859, type: 3}

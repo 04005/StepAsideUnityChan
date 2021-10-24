@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class ItemGenerator : MonoBehaviour
 {
+    //unityちゃんを入れる
+    [SerializeField]
+    private Transform uniryChan; 
+
     //carPrefabを入れる
     public GameObject carPrefab;
     //coinPrefabを入れる
@@ -16,13 +20,24 @@ public class ItemGenerator : MonoBehaviour
     private int goalPos = 360;
     //アイテムを出すx方向の範囲
     private float posRange = 3.4f;
-    //
-    private int destroyTime=10000;
+    //オブジェクト削除時間
+    private int destTime = 5;
+    //オブジェクト設置距離
+    private int setDis = 50;
+    //オブジェクトの配置座標
+    private int setItemCoordinate ;
+
     // Use this for initialization
     void Start()
     {
+        setItemCoordinate = startPos;
+    }
+
+// Update is called once per frame
+void Update()
+    {
         //一定の距離ごとにアイテムを生成
-        for (int i = startPos; i < goalPos; i += 15)
+        for (; setItemCoordinate < uniryChan.position.z + setDis && setItemCoordinate < goalPos + setDis; setItemCoordinate += 15)
         {
             //どのアイテムを出すのかをランダムに設定
             int num = Random.Range(1, 11);
@@ -32,14 +47,13 @@ public class ItemGenerator : MonoBehaviour
                 for (float j = -1; j <= 1; j += 0.4f)
                 {
                     GameObject cone = Instantiate(conePrefab);
-                    cone.transform.position = new Vector3(4 * j, cone.transform.position.y, i);
+                    cone.transform.position = new Vector3(4 * j, cone.transform.position.y, setItemCoordinate);
                     //生成から一定時間後に削除
-                    Destroy(cone,destroyTime);
+                    Destroy(cone, destTime);
                 }
             }
             else
             {
-
                 //レーンごとにアイテムを生成
                 for (int j = -1; j <= 1; j++)
                 {
@@ -52,24 +66,18 @@ public class ItemGenerator : MonoBehaviour
                     {
                         //コインを生成
                         GameObject coin = Instantiate(coinPrefab);
-                        coin.transform.position = new Vector3(posRange * j, coin.transform.position.y, i + offsetZ);
-                        Destroy(coin, destroyTime);
+                        coin.transform.position = new Vector3(posRange * j, coin.transform.position.y, setItemCoordinate + offsetZ);
+                        Destroy(coin, destTime);
                     }
                     else if (7 <= item && item <= 9)
                     {
                         //車を生成
                         GameObject car = Instantiate(carPrefab);
-                        car.transform.position = new Vector3(posRange * j, car.transform.position.y, i + offsetZ);
-                        Destroy(car,destroyTime);
+                        car.transform.position = new Vector3(posRange * j, car.transform.position.y, setItemCoordinate + offsetZ);
+                        Destroy(car, destTime);
                     }
                 }
             }
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }
