@@ -8,6 +8,8 @@ TagManager:
   - TrafficConeTag
   - CoinTag
   - GoalTag
+  - RoadLeftEdge
+  - RoadRightEdge
   layers:
   - Default
   - TransparentFX

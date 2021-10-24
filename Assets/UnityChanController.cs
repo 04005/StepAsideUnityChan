@@ -1,49 +1,62 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UnityChanController : MonoBehaviour
 {
-    //ƒAƒjƒ[ƒVƒ‡ƒ“‚·‚é‚½‚ß‚ÌƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ“ü‚ê‚é
+    [SerializeField]
+    private Transform roadLeftEdge;
+    [SerializeField]
+    private Transform roadRightEdge;
+
+    //ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã™ã‚‹ãŸã‚ã®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’å…¥ã‚Œã‚‹
     private Animator myAnimator;
-    //Unity‚¿‚á‚ñ‚ğˆÚ“®‚³‚¹‚éƒRƒ“ƒ|[ƒlƒ“ƒg‚ğ“ü‚ê‚é
+    //Unityã¡ã‚ƒã‚“ã‚’ç§»å‹•ã•ã›ã‚‹ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’å…¥ã‚Œã‚‹
     private Rigidbody myRigidbody;
-    //‘O•ûŒü‚Ì‘¬“x
+    //å‰æ–¹å‘ã®é€Ÿåº¦
     private float velocityZ = 16f;
-    //‰¡•ûŒü‚Ì‘¬“x
+    //æ¨ªæ–¹å‘ã®é€Ÿåº¦
     private float velocityX = 10f;
-    //ã•ûŒü‚Ì‘¬“x
+    //ä¸Šæ–¹å‘ã®é€Ÿåº¦
     private float velocityY = 10f;
-    //¶‰E‚ÌˆÚ“®‚Å‚«‚é”ÍˆÍ
-    private float movableRange = 3.4f;
-    // Use this for initialization
-    //“®‚«‚ğŒ¸‘¬‚³‚¹‚éŒW”
-    private float coefficient = 0.99f;
-    //ƒQ[ƒ€I—¹‚Ì”»’è
+    //å‹•ãã‚’æ¸›é€Ÿã•ã›ã‚‹ä¿‚æ•°
+    private float coefficient = 0.98f;
+    //ã‚²ãƒ¼ãƒ çµ‚äº†ã®åˆ¤å®š
     private bool isEnd = false;
-    //ƒQ[ƒ€I—¹‚É•\¦‚·‚éƒeƒLƒXƒg
+    //ã‚²ãƒ¼ãƒ çµ‚äº†æ™‚ã«è¡¨ç¤ºã™ã‚‹ãƒ†ã‚­ã‚¹ãƒˆ
     private GameObject stateText;
-    //ƒXƒRƒA‚ğ•\¦‚·‚éƒeƒLƒXƒg
+    //ã‚¹ã‚³ã‚¢ã‚’è¡¨ç¤ºã™ã‚‹ãƒ†ã‚­ã‚¹ãƒˆ
     private GameObject scoreText;
-    //“¾“_
+    //å¾—ç‚¹
     private int score = 0;
+    //å·¦ãƒœã‚¿ãƒ³æŠ¼ä¸‹ã®åˆ¤å®šï¼ˆè¿½åŠ ï¼‰
+    private bool isLButtonDown = false;
+    //å³ãƒœã‚¿ãƒ³æŠ¼ä¸‹ã®åˆ¤å®šï¼ˆè¿½åŠ ï¼‰
+    private bool isRButtonDown = false;
+    //ã‚¸ãƒ£ãƒ³ãƒ—ãƒœã‚¿ãƒ³æŠ¼ä¸‹ã®åˆ¤å®šï¼ˆè¿½åŠ ï¼‰
+    private bool isJButtonDown = false;
 
     void Start()
     {
-        //ƒAƒjƒ[ƒ^ƒRƒ“ƒ|[ƒlƒ“ƒg‚ğæ“¾
+        //ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’å–å¾—
         this.myAnimator = GetComponent<Animator>();
 
-        //‘–‚éƒAƒjƒ[ƒVƒ‡ƒ“‚ğŠJn
+        //èµ°ã‚‹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’é–‹å§‹
         this.myAnimator.SetFloat("Speed", 1);
 
-        //RigidbodyƒRƒ“ƒ|[ƒlƒ“ƒg‚ğæ“¾
+        //Rigidbodyã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’å–å¾—
         this.myRigidbody = GetComponent<Rigidbody>();
+        //ã‚·ãƒ¼ãƒ³ä¸­ã®stateTextã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å–å¾—
+        this.stateText = GameObject.Find("GameResultText");
+        //ã‚·ãƒ¼ãƒ³ä¸­ã®scoreTextã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å–å¾—ï¼ˆè¿½åŠ ï¼‰
+        this.scoreText = GameObject.Find("ScoreText");
     }
 
     // Update is called once per frame
     void Update()
     {
-        //ƒQ[ƒ€I—¹‚È‚çUnity‚¿‚á‚ñ‚Ì“®‚«‚ğŒ¸Š‚·‚é
+        //ã‚²ãƒ¼ãƒ çµ‚äº†ãªã‚‰Unityã¡ã‚ƒã‚“ã®å‹•ãã‚’æ¸›è¡°ã™ã‚‹
         if (this.isEnd)
         {
             this.velocityZ *= this.coefficient;
@@ -52,69 +65,112 @@ public class UnityChanController : MonoBehaviour
             this.myAnimator.speed *= this.coefficient;
         }
 
-        //‰¡•ûŒü‚Ì“ü—Í‚É‚æ‚é‘¬“x
+        //æ¨ªæ–¹å‘ã®å…¥åŠ›ã«ã‚ˆã‚‹é€Ÿåº¦
         float inputVelocityX = 0;
-        //ã•ûŒü‚Ì“ü—Í‚É‚æ‚é‘¬“x
+        //ä¸Šæ–¹å‘ã®å…¥åŠ›ã«ã‚ˆã‚‹é€Ÿåº¦
         float inputVelocityY = 0;
 
-        //Unity‚¿‚á‚ñ‚ğ–îˆóƒL[‚Ü‚½‚Íƒ{ƒ^ƒ“‚É‰‚¶‚Ä¶‰E‚ÉˆÚ“®‚³‚¹‚é
-        if (Input.GetKey(KeyCode.LeftArrow) && -this.movableRange < this.transform.position.x)
+        //Unityã¡ã‚ƒã‚“ã‚’çŸ¢å°ã‚­ãƒ¼ã¾ãŸã¯ãƒœã‚¿ãƒ³ã«å¿œã˜ã¦å·¦å³ã«ç§»å‹•ã•ã›ã‚‹
+        if ((Input.GetKey(KeyCode.LeftArrow) || this.isLButtonDown) && this.roadLeftEdge.position.x < this.transform.position.x)
         {
-            //¶•ûŒü‚Ö‚Ì‘¬“x‚ğ‘ã“ü
+            //å·¦æ–¹å‘ã¸ã®é€Ÿåº¦ã‚’ä»£å…¥
             inputVelocityX = -this.velocityX;
         }
-        else if (Input.GetKey(KeyCode.RightArrow) && this.transform.position.x < this.movableRange)
+        else if ((Input.GetKey(KeyCode.RightArrow) || this.isRButtonDown) && this.transform.position.x < this.roadRightEdge.position.x)
         {
-            //‰E•ûŒü‚Ö‚Ì‘¬“x‚ğ‘ã“ü
+            //å³æ–¹å‘ã¸ã®é€Ÿåº¦ã‚’ä»£å…¥
             inputVelocityX = this.velocityX;
         }
-        //ƒWƒƒƒ“ƒv‚µ‚Ä‚¢‚È‚¢‚ÉƒXƒy[ƒX‚ª‰Ÿ‚³‚ê‚½‚çƒWƒƒƒ“ƒv‚·‚é
-        if (Input.GetKeyDown(KeyCode.Space) && this.transform.position.y < 0.5f)
+        //ã‚¸ãƒ£ãƒ³ãƒ—ã—ã¦ã„ãªã„æ™‚ã«ã‚¹ãƒšãƒ¼ã‚¹ãŒæŠ¼ã•ã‚ŒãŸã‚‰ã‚¸ãƒ£ãƒ³ãƒ—ã™ã‚‹
+        if ((Input.GetKeyDown(KeyCode.Space)|| isJButtonDown) && this.transform.position.y < 0.5f)
         {
-            //ƒWƒƒƒ“ƒvƒAƒjƒ‚ğÄ¶
+            //ã‚¸ãƒ£ãƒ³ãƒ—ã‚¢ãƒ‹ãƒ¡ã‚’å†ç”Ÿ
             this.myAnimator.SetBool("Jump", true);
-            //ã•ûŒü‚Ö‚Ì‘¬“x‚ğ‘ã“ü
+            //ä¸Šæ–¹å‘ã¸ã®é€Ÿåº¦ã‚’ä»£å…¥
             inputVelocityY = this.velocityY;
         }
         else
         {
-            //Œ»İ‚ÌY²‚Ì‘¬“x‚ğ‘ã“ü
+            //ç¾åœ¨ã®Yè»¸ã®é€Ÿåº¦ã‚’ä»£å…¥
             inputVelocityY = this.myRigidbody.velocity.y;
         }
 
-        //JumpƒXƒe[ƒg‚Ìê‡‚ÍJump‚Éfalse‚ğƒZƒbƒg‚·‚é
+        //Jumpã‚¹ãƒ†ãƒ¼ãƒˆã®å ´åˆã¯Jumpã«falseã‚’ã‚»ãƒƒãƒˆã™ã‚‹
         if (this.myAnimator.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
         {
             this.myAnimator.SetBool("Jump", false);
         }
 
-        //Unity‚¿‚á‚ñ‚É‘¬“x‚ğ—^‚¦‚é
+        //Unityã¡ã‚ƒã‚“ã«é€Ÿåº¦ã‚’ä¸ãˆã‚‹
         this.myRigidbody.velocity = new Vector3(inputVelocityX, inputVelocityY, velocityZ);
     }
 
-    //ƒgƒŠƒK[ƒ‚[ƒh‚Å‘¼‚ÌƒIƒuƒWƒFƒNƒg‚ÆÚG‚µ‚½ê‡‚Ìˆ—
+    //ãƒˆãƒªã‚¬ãƒ¼ãƒ¢ãƒ¼ãƒ‰ã§ä»–ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¨æ¥è§¦ã—ãŸå ´åˆã®å‡¦ç†
     void OnTriggerEnter(Collider other)
     {
 
-        //áŠQ•¨‚ÉÕ“Ë‚µ‚½ê‡
+        //éšœå®³ç‰©ã«è¡çªã—ãŸå ´åˆ
         if (other.gameObject.tag == "CarTag" || other.gameObject.tag == "TrafficConeTag")
         {
             this.isEnd = true;
+            //stateTextã«GAME OVERã‚’è¡¨ç¤ºï¼ˆè¿½åŠ ï¼‰
+            this.stateText.GetComponent<Text>().text = "GAME OVER";
         }
 
-        //ƒS[ƒ‹’n“_‚É“’B‚µ‚½ê‡
+        //ã‚´ãƒ¼ãƒ«åœ°ç‚¹ã«åˆ°é”ã—ãŸå ´åˆ
         if (other.gameObject.tag == "GoalTag")
         {
             this.isEnd = true;
+            //stateTextã«GAME CLEARã‚’è¡¨ç¤ºï¼ˆè¿½åŠ ï¼‰
+            this.stateText.GetComponent<Text>().text = "CLEAR!!";
         }
 
-        //ƒRƒCƒ“‚ÉÕ“Ë‚µ‚½ê‡
+        //ã‚³ã‚¤ãƒ³ã«è¡çªã—ãŸå ´åˆ
         if (other.gameObject.tag == "CoinTag")
         {
-            //ƒp[ƒeƒBƒNƒ‹‚ğÄ¶
+            // ã‚¹ã‚³ã‚¢ã‚’åŠ ç®—(è¿½åŠ )
+            this.score += 10;
+            //ScoreTextç²å¾—ã—ãŸç‚¹æ•°ã‚’è¡¨ç¤º(è¿½åŠ )
+            this.scoreText.GetComponent<Text>().text = "Score " + this.score + "pt";
+
+            //ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã‚’å†ç”Ÿ
             GetComponent<ParticleSystem>().Play();
-            //ÚG‚µ‚½ƒRƒCƒ“‚ÌƒIƒuƒWƒFƒNƒg‚ğ”jŠü
+            //æ¥è§¦ã—ãŸã‚³ã‚¤ãƒ³ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç ´æ£„
             Destroy(other.gameObject);
         }
+    }
+
+    //ã‚¸ãƒ£ãƒ³ãƒ—ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸå ´åˆã®å‡¦ç†ï¼ˆè¿½åŠ ï¼‰
+    public void GetMyJumpButtonDown()
+    {
+        this.isJButtonDown = true;
+    }
+
+    //ã‚¸ãƒ£ãƒ³ãƒ—ãƒœã‚¿ãƒ³ã‚’é›¢ã—ãŸå ´åˆã®å‡¦ç†ï¼ˆè¿½åŠ ï¼‰
+    public void GetMyJumpButtonUp()
+    {
+        this.isJButtonDown = false;
+    }
+
+    //å·¦ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ç¶šã‘ãŸå ´åˆã®å‡¦ç†ï¼ˆè¿½åŠ ï¼‰
+    public void GetMyLeftButtonDown()
+    {
+        this.isLButtonDown = true;
+    }
+    //å·¦ãƒœã‚¿ãƒ³ã‚’é›¢ã—ãŸå ´åˆã®å‡¦ç†ï¼ˆè¿½åŠ ï¼‰
+    public void GetMyLeftButtonUp()
+    {
+        this.isLButtonDown = false;
+    }
+
+    //å³ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ç¶šã‘ãŸå ´åˆã®å‡¦ç†ï¼ˆè¿½åŠ ï¼‰
+    public void GetMyRightButtonDown()
+    {
+        this.isRButtonDown = true;
+    }
+    //å³ãƒœã‚¿ãƒ³ã‚’é›¢ã—ãŸå ´åˆã®å‡¦ç†ï¼ˆè¿½åŠ ï¼‰
+    public void GetMyRightButtonUp()
+    {
+        this.isRButtonDown = false;
     }
 }
