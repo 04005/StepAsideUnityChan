@@ -7,7 +7,6 @@ public class ItemGenerator : MonoBehaviour
     //unityちゃんを入れる
     [SerializeField]
     private Transform uniryChan; 
-
     //carPrefabを入れる
     public GameObject carPrefab;
     //coinPrefabを入れる
@@ -37,7 +36,7 @@ public class ItemGenerator : MonoBehaviour
 void Update()
     {
         //一定の距離ごとにアイテムを生成
-        for (; setItemCoordinate < uniryChan.position.z + setDis && setItemCoordinate < goalPos + setDis; setItemCoordinate += 15)
+        for (; setItemCoordinate < uniryChan.position.z + setDis && setItemCoordinate < goalPos - setDis; setItemCoordinate += 15)
         {
             //どのアイテムを出すのかをランダムに設定
             int num = Random.Range(1, 11);

@@ -9,7 +9,6 @@ public class UnityChanController : MonoBehaviour
     private Transform roadLeftEdge;
     [SerializeField]
     private Transform roadRightEdge;
-
     //アニメーションするためのコンポーネントを入れる
     private Animator myAnimator;
     //Unityちゃんを移動させるコンポーネントを入れる
@@ -64,12 +63,10 @@ public class UnityChanController : MonoBehaviour
             this.velocityY *= this.coefficient;
             this.myAnimator.speed *= this.coefficient;
         }
-
         //横方向の入力による速度
         float inputVelocityX = 0;
         //上方向の入力による速度
         float inputVelocityY = 0;
-
         //Unityちゃんを矢印キーまたはボタンに応じて左右に移動させる
         if ((Input.GetKey(KeyCode.LeftArrow) || this.isLButtonDown) && this.roadLeftEdge.position.x < this.transform.position.x)
         {
@@ -108,23 +105,20 @@ public class UnityChanController : MonoBehaviour
     //トリガーモードで他のオブジェクトと接触した場合の処理
     void OnTriggerEnter(Collider other)
     {
-
         //障害物に衝突した場合
-        if (other.gameObject.tag == "CarTag" || other.gameObject.tag == "TrafficConeTag")
+        if ((other.gameObject.tag == "CarTag" || other.gameObject.tag == "TrafficConeTag")&& !isEnd)
         {
             this.isEnd = true;
             //stateTextにGAME OVERを表示（追加）
             this.stateText.GetComponent<Text>().text = "GAME OVER";
         }
-
         //ゴール地点に到達した場合
-        if (other.gameObject.tag == "GoalTag")
+        if (other.gameObject.tag == "GoalTag"&& !isEnd)
         {
             this.isEnd = true;
             //stateTextにGAME CLEARを表示（追加）
             this.stateText.GetComponent<Text>().text = "CLEAR!!";
         }
-
         //コインに衝突した場合
         if (other.gameObject.tag == "CoinTag")
         {
@@ -139,7 +133,6 @@ public class UnityChanController : MonoBehaviour
             Destroy(other.gameObject);
         }
     }
-
     //ジャンプボタンを押した場合の処理（追加）
     public void GetMyJumpButtonDown()
     {
